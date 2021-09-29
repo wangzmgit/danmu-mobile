@@ -1,0 +1,86 @@
+.danmaku-item {
+    position: absolute;
+    font-size: 22px;
+    white-space: nowrap;
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000;
+}
+
+@keyframes mov {
+    from {
+        right: -200px;
+    }
+    to {
+        right: 3000px;
+    }
+}
+
+@-moz-keyframes mov {
+    /* Firefox */
+    from {
+        right: -200px;
+    }
+    to {
+        right: 3000px;
+    }
+}
+
+@-webkit-keyframes mov {
+    /* Safari 和 Chrome */
+    from {
+        right: -200px;
+    }
+    to {
+        right: 3000px;
+    }
+}
+
+@-o-keyframes mov {
+    /* Opera */
+    from {
+        right: -200px;
+    }
+    to {
+        right: 3000px;
+    }
+}
+
+
+
+@keyframes danmaku-center {
+    from {
+        visibility: visible;
+    }
+    to {
+        visibility: visible;
+    }
+}
+
+@-moz-keyframes danmaku-center {
+    /* Firefox */
+    from {
+        visibility: visible;
+    }
+    to {
+        visibility: visible;
+    }
+}
+
+@-webkit-keyframes danmaku-center {
+    /* Safari 和 Chrome */
+    from {
+        visibility: visible;
+    }
+    to {
+        visibility: visible;
+    }
+}
+
+@-o-keyframes danmaku-center {
+    /* Opera */
+    from {
+        visibility: visible;
+    }
+    to {
+        visibility: visible;
+    }
+}
