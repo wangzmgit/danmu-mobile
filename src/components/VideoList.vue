@@ -1,6 +1,6 @@
 <template>
   <div class="card-list">
-    <div class="v-card" v-for="(item, index) in videoList" :key="index">
+    <div class="v-card" v-for="(item, index) in list" :key="index">
       <div class="card" @click="video(item.vid)">
         <img :src="item.cover" />
         <div class="title">
@@ -8,58 +8,23 @@
         </div>
       </div>
     </div>
-    <div v-if="more" class="more">
-      <a-spin v-if="loadingMore" />
-      <a-button v-else @click="getMore()">加载更多...</a-button>
-    </div>
   </div>
 </template>
 
 <script>
-import { getVideoList } from "@/api/video";
+
 export default {
-  props: {},
-  data() {
-    return {
-      videoList: [],
-      page: 1,
-      flag: true, //视频在第一页
-      loadingMore:false,
-      more:true,//允许加载更多
-    };
+  props: {
+    list: {
+      type: Array,
+      default: null,
+    },
   },
   methods: {
-    _getVideoList() {
-      getVideoList(this.page, 6).then((res) => {
-        if (res.data.code === 2000) {
-          if (this.flag) {
-            this.videoList = res.data.data.videos;
-            this.flag = false;
-          } else {
-            var newList = res.data.data.videos;
-            if (newList.length == 0) {
-              this.$message.info("没有更多了");
-              this.more = false;
-            } else {
-              this.videoList = this.videoList.concat(newList);
-            }
-          }
-          this.loadingMore = false;
-        }
-      });
-    },
     //页面跳转
     video(vid) {
       this.$router.push({ name: "Video", params: { vid: vid } });
     },
-    getMore() {
-      this.loadingMore = true;
-      this.page++;
-      this._getVideoList();
-    },
-  },
-  created() {
-    this._getVideoList();
   },
 };
 </script>
@@ -108,10 +73,5 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
-}
-
-.more{
-  width: 100%;
-  text-align: center;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="u-msg">
+  <div class="u-msg" v-title data-title="私信">
     <a-affix>
       <div class="u-msg-top">
         <span @click="back()"><a-icon type="left" /></span>
@@ -10,7 +10,6 @@
     <!--内容-->
     <div class="u-msg-main">
       <MessageList :list="msgDetails"></MessageList>
-
     </div>
     <!--发送-->
     <footer id="input" class="send">

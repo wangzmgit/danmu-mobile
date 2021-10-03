@@ -1,5 +1,5 @@
 <template>
-  <div class="msg">
+  <div class="msg" v-title data-title="消息">
     <a-affix>
       <header-bar></header-bar>
       <div>

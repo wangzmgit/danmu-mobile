@@ -24,6 +24,18 @@ const routes = [
       import('../views/Login.vue')
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: () =>
+      import('../views/Register.vue')
+  },
+  {
+    path: '/search/:keywords',
+    name: 'Search',
+    component: () =>
+        import('../views/Search.vue')
+  },
+  {
     path: '/message',
     name: 'Message',
     meta: { auth: true },
@@ -38,7 +50,7 @@ const routes = [
         import('../views/message/Announce.vue'),
   },
   {
-    path: '/message/user',
+    path: '/message/user/:fid',
     name: 'UserMsg',
     meta: { auth: true },
     component: () =>

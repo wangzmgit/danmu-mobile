@@ -1,5 +1,5 @@
 <template>
-  <div class="info">
+  <div class="info" v-title data-title="编辑资料">
     <header-bar></header-bar>
     <table class="info-card">
       <tr>

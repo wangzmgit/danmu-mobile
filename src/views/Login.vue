@@ -15,9 +15,10 @@
       </a-form-model-item>
       <div class="login-btn">
         <a-button size="large" type="primary" @click="loginClick('form')">登录</a-button>
+        <a-button size="large" @click="loginRouter('Register')">前往注册</a-button>
       </div>
     </a-form-model>
-    <a-button type="link" class="home-btn" @click="goHome()">先去逛逛</a-button>
+    <a-button type="link" class="home-btn" @click="loginRouter('Home')">先去逛逛</a-button>
   </div>
 </template>
 
@@ -61,8 +62,8 @@ export default {
         }
       });
     },
-    goHome() {
-      this.$router.push({ name: "Home" });
+    loginRouter(name) {
+      this.$router.push({ name: name });
     },
   },
 };
@@ -95,6 +96,10 @@ export default {
   color: #fff;
 }
 
+.login-title > h1{
+  color: #fff;
+}
+
 .form-input{
   margin: 10px 10px;
 }
@@ -113,5 +118,7 @@ export default {
 .login-btn>button{
   height: 36px;
   width: calc(100% - 20px);
+  margin-bottom: 10px;
 }
+
 </style>

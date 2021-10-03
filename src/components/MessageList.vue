@@ -1,6 +1,6 @@
 <template>
   <div class="msg-list">
-    <div v-for="(item, index) in list" :key="index" class="content-box">
+    <div id="content" v-for="(item, index) in list" :key="index" class="content-box">
       <!--自己发送的-->
       <div v-if="item.from_id == userInfo.uid">
         <a-avatar class="avatar-right" v-if="userInfo" :size="45" :src="userInfo.avatar"/>
@@ -52,14 +52,13 @@ export default {
 
 <style scoped>
 .msg-list {
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 100%;
 }
 
 .content-box {
   min-height: 70px;
   margin: 0 10px;
-  overflow-y: scroll;
 }
 .content-box:nth-child(1) {
   margin-top: 10px;

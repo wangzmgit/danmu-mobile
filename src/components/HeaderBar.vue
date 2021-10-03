@@ -8,7 +8,7 @@
       <a-avatar :size="40" @click="headerRouter('Login',$route.path)">登录</a-avatar>
     </div>
     <div class="search-box">
-      <a-input-search v-model="keywords" v-show="this.$route.name != 'Search'" placeholder="搜索关键词~" @search="search()"/>
+      <a-input-search v-model="keywords" placeholder="搜索关键词~" @search="search()"/>
     </div>
     <div class="msg" @click="headerRouter('Message',$route.path)">
       <a-icon type="mail"/>

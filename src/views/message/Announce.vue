@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-title data-title="系统公告">
     <header-bar></header-bar>
     <div v-if="loading" class="loading">
       <a-icon type="loading" />

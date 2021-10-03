@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-title :data-title="`${title}-视频播放`">
     <header-bar></header-bar>
     <div class="video-player">
       <w-player v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import config from "@/utils/config.js";
 import WPlayer from "@/components/WPlayer/WPlayer.vue";
 import { toRelativeTime } from "@/utils/time";
 import HeaderBar from "@/components/HeaderBar.vue";
@@ -39,6 +40,7 @@ import Comment from "@/components/CommentList";
 export default {
   data() {
     return {
+      title:config.title,
       vid: 0,
       hls:null,
       videoInfo: [],

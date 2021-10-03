@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-title :data-title="`${userInfo.name}的个人中心`">
     <header-bar></header-bar>
     <div class="banner">
         <img src="../../assets/banner.jpg"/>
@@ -89,6 +89,9 @@ export default {
           }
           if (this.flag) {
             this.videoList = res.data.data.data;
+            if(this.videoList.length == 0){
+              this.more = false;
+            }
             this.flag = false;
           } else {
             var newList = res.data.data.data;

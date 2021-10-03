@@ -1,18 +1,23 @@
 <template>
-  <div class="home">
+  <div class="home" v-title :data-title="`${config.title}首页`" >
     <a-affix>
      <header-bar></header-bar>
     </a-affix>
-    <a-carousel :autoplay="true">
-      <div v-for="(item, index) in carousel" :key="index">
-        <img class="carousel-img" :src="item.img" />
+    <div v-infinite-scroll="getMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+      <a-carousel :autoplay="true">
+        <div v-for="(item, index) in carousel" :key="index">
+          <img class="carousel-img" :src="item.img" />
+        </div>
+      </a-carousel>
+      <div class="transition">
+        <span>视频列表</span>
       </div>
-    </a-carousel>
-    <div class="transition">
-      <span>视频列表</span>
+      <!--视频列表-->
+      <video-list :list="videoList"></video-list>
+      <div v-show="loadingMore" class="more">
+        <a-spin />
+      </div>
     </div>
-    <!--视频列表-->
-    <video-list></video-list>
     <footer class="footer">
       <ul>
         <li><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ config.icp }}</a></li>
@@ -26,6 +31,7 @@
 
 <script>
 import config from "@/utils/config.js";
+import { getVideoList } from "@/api/video";
 import { getCarousel } from "@/api/carousel.js";
 import HeaderBar from "@/components/HeaderBar.vue";
 import VideoList from "@/components/VideoList.vue";
@@ -35,6 +41,11 @@ export default {
     return {
       carousel: [],
       config: config,
+      videoList: [],
+      page: 1,
+      flag: true, //视频在第一页
+      loadingMore:false,
+      busy:false,//允许加载更多
     };
   },
   methods: {
@@ -45,9 +56,36 @@ export default {
         }
       });
     },
+    _getVideoList() {
+      getVideoList(this.page, 6).then((res) => {
+        console.log("加载")
+        if (res.data.code === 2000) {
+          if (this.flag) {
+            this.videoList = res.data.data.videos;
+            this.flag = false;
+          } else {
+            var newList = res.data.data.videos;
+            if (newList.length == 0) {
+              this.$message.info("没有更多了");
+              this.busy = true;
+            } else {
+              this.videoList = this.videoList.concat(newList);
+            }
+          }
+          this.loadingMore = false;
+        }
+      });
+    },
+    getMore() {
+      this.loadingMore = true;
+      this.page++;
+      this._getVideoList();
+
+    },
   },
   created() {
     this._getCarousel();
+    this._getVideoList();
   },
   components: {
     "header-bar": HeaderBar,
@@ -68,6 +106,12 @@ export default {
   justify-content: space-between;
   margin-left: 10px;
   font-size: 18px;
+}
+
+.more{
+  width: 100%;
+  height: 40px;
+  text-align: center;
 }
 
 .footer {
