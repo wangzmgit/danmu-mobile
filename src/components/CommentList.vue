@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <div class="comment-item" v-for="(item, index) in commentList" :key="index">
       <!--一级评论-->
       <div class="comment-first">
@@ -17,31 +17,23 @@
         <div class="c-first-content">
           <span>{{ item.content }}</span>
         </div>
-      </div>
-      <!--二级评论-->
-      <div class="c-second" v-for="(reply, i) in item.reply" :key="i">
-        <!--头像和昵称-->
-        <div class="info">
-          <div class="reply-face">
-            <a-avatar :size="30" :src="reply.avatar" />
+        <div class="reply-box" v-if="item.reply.length">
+          <div v-for="(reply, i) in item.reply" :key="i">
+            <div class="reply-content">
+              <span class="reply-name">{{ reply.name }}&nbsp;</span>
+              <span>回复&nbsp;@{{ reply.reply_name }}</span>
+              <span>&nbsp;{{ reply.content }}</span>
+            </div>
           </div>
-          <div class="c-second-name">
-            <span>{{ reply.name }}</span>
+          <div @click="showReply(item.cid)">
+            <p v-if="item.reply_count == 0">展开回复<a-icon type="right" /></p>
+            <p v-else>共{{item.reply_count}}条回复<a-icon type="right" /></p>
           </div>
-          <p class="c-second-date">{{ reply.created_at | toTime }}</p>
         </div>
-        <!--二级评论内容-->
-        <div class="c-second-content">
-          <span style="color: #00a1d6; cursor: pointer">@{{ reply.reply_name }}</span>
-          <span>&nbsp;{{ reply.content }}</span>
-        </div>
-        <!--分割线-->
-        <div v-show="i != item.reply.length - 1" class="divider"/>
       </div>
     </div>
-    <div v-if="more" class="more">
-      <a-spin v-if="loadingMore" />
-      <a-button v-else @click="getMore()">加载更多...</a-button>
+    <div v-show="loadingMore" class="more">
+      <a-spin />
     </div>
   </div>
 </template>
@@ -61,9 +53,8 @@ export default {
       commentList: [],
       flag: true, //评论在第一页
       page: 1,
-      page_size: 3,
+      page_size: 10,
       loadingMore: false,
-      more: true, //允许加载更多
     };
   },
   methods: {
@@ -80,12 +71,13 @@ export default {
               this.more = false;
             }
             this.commentList = res.data.data.comments;
-            this.flag = !this.flag;
+            this.page = 5;//第一次获取10条，之后每次获取5条
+            this.flag = false;
           } else {
             var newList = res.data.data.comments;
             if (newList.length == 0) {
               this.$message.info("没有更多了");
-              this.more = false;
+              this.$parent.noMore();
             } else {
               this.commentList = this.commentList.concat(newList);
             }
@@ -95,6 +87,9 @@ export default {
         }
       });
     },
+    showReply(cid){
+      this.$parent.showReplyList(cid)
+    }
   },
   created() {
     this._getCommentList();
@@ -137,36 +132,23 @@ export default {
 }
 
 .c-first-content {
-  margin: 5px 0 10px 50px;
+  margin: 5px 10px 10px 50px;
 }
 
-.reply-face {
-  margin-left: 50px;
+.reply-box{
+  color: #212121;
+  margin: 0 10px 10px 50px;
+  padding: 5px 10px;
+  background-color: #f4f4f4;
 }
 
-.c-second-name {
-  position: absolute;
-  left: 90px;
-  top: 0;
-  color: #2e2e2e;
-  font-size: 10px;
+.reply-name{
+  color: #00a1d6;
 }
 
-.c-second-date {
-  position: absolute;
-  font-size: 8px;
-  left: 90px;
-  top: 16px;
-  width: 80px;
-}
-
-.c-second-content {
-  margin: 8px 0 8px 85px;
-}
-
-.divider{
-  margin-left: 60px;
-  border-bottom: 1px solid #e7e7e7;
+.reply-box>div>p{
+  margin: 4px 0;
+  color: #00a1d6;
 }
 
 .more{

@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" v-title :data-title="`${title}登录`">
     <div class="login-bg">
       <img src="../assets/login.jpg" />
     </div>
@@ -25,9 +25,11 @@
 <script>
 import Cookies from "js-cookie";
 import { login } from "@/api/user";
+import config from "@/utils/config.js";
 export default {
   data() {
     return {
+      title: config.title,
       form: {
         email: "",
         password: "",

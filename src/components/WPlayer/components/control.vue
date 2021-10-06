@@ -186,6 +186,7 @@ export default {
         }
         this.isFull = false;
       }
+      this.$parent.Full(this.isFull);
     },
     //处理时间格式
     VideoTime(time) {

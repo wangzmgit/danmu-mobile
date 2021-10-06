@@ -45,7 +45,7 @@ export default {
       page: 1,
       flag: true, //视频在第一页
       loadingMore:false,
-      busy:false,//允许加载更多
+      busy:false,//不允许加载更多
     };
   },
   methods: {

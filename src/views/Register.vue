@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" v-title :data-title="`${title}注册`">
     <div class="login-bg">
       <img src="../assets/login.jpg" />
     </div>
@@ -30,9 +30,11 @@
 <script>
 import { send } from "@/api/code.js";
 import { register } from "@/api/user";
+import config from "@/utils/config.js";
 export default {
   data() {
     return {
+      title: config.title,
       disabled:false,//禁用发送按钮
       text:"发送验证码",
       registerFrom: {

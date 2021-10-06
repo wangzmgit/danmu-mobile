@@ -1,6 +1,6 @@
 <template>
   <div ref="videoOuterLayer" class="uncheck" @click="ClickVideo()">
-    <div id="video" ref="videoBox">
+    <div :class="full?'video-box-full':'video-box'" ref="videoBox">
       <!--弹幕层-->
       <danmaku v-if="showDanmaku" :danmakuList="danmakuList" ref="danmaku"></danmaku>
       <!--Video层-->
@@ -58,6 +58,7 @@ export default {
       showVideoInfo:false,
       currentTime:0,
       danmakuList: [],
+      full:false,//是否全屏
     };
   },
   methods: {
@@ -162,6 +163,10 @@ export default {
           this.amount = this.danmakuList.length;
         }
       });
+    },
+    //处理全屏
+    Full(full){
+      this.full = full;
     }
   },
   mounted(){
@@ -205,11 +210,16 @@ export default {
   user-select: none;
 }
 
-#video {
+.video-box {
+  height: 0;
   width: 100%;
   position: relative;
-  /**position: relative;
-  padding-bottom: 56.25%;*/
+  padding-bottom: 56.25%;
+}
+
+.video-box-full {
+  width: 100%;
+  position: relative;
 }
 
 .player {
@@ -217,7 +227,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  
+  position: absolute;
   background-color: black;
 }
 
