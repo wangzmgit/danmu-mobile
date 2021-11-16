@@ -20,6 +20,8 @@
     </div>
     <footer class="footer">
       <ul>
+        <li v-if="config.desktop"><a :href="config.desktop">PC端</a></li>
+        <li v-if="config.desktop" class="split"></li>
         <li><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ config.icp }}</a></li>
       </ul>
       <ul>
@@ -140,5 +142,11 @@ export default {
 
 .footer > ul > li > a:hover{
   text-decoration: underline;
+}
+
+.split{
+  width: 1px;
+  height: 16px;
+  border-left: 1px solid #808080;
 }
 </style>

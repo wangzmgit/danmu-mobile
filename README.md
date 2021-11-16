@@ -10,6 +10,7 @@
 ```
 const title = "网站标题";
 const url = "后端地址";
+const desktop = "桌面端地址";
 const icp = "icp备案信息";
 ```
 
