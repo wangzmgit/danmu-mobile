@@ -30,7 +30,7 @@
 <script>
 import { send } from "@/api/code.js";
 import { register } from "@/api/user";
-import config from "@/utils/config.js";
+import config from "@/config.js";
 export default {
   data() {
     return {

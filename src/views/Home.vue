@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import config from "@/utils/config.js";
+import config from "@/config.js";
 import { getVideoList } from "@/api/video";
 import { getCarousel } from "@/api/carousel.js";
 import HeaderBar from "@/components/HeaderBar.vue";

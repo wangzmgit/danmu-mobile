@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import config from "@/utils/config.js";
+import config from "@/config.js";
 import WPlayer from "@/components/WPlayer/WPlayer.vue";
 import { toRelativeTime } from "@/utils/time";
 import HeaderBar from "@/components/HeaderBar.vue";

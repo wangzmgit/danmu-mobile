@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from "./config"
+import config from "../config"
 import Cookies from "js-cookie";
 
 const URL = config.url + "/api/";

@@ -25,7 +25,7 @@
 <script>
 import Cookies from "js-cookie";
 import { login } from "@/api/user";
-import config from "@/utils/config.js";
+import config from "@/config.js";
 export default {
   data() {
     return {
