@@ -34,23 +34,21 @@ import Danmaku from "./components/danmaku.vue";
 import SendDanmaku from "./components/send-danmaku.vue";
 export default {
   props: {
-    src: {
-      type: String,
-      default: null,
-    },
     vid: {
       type: Number,
       default: null,
     },
-    type: {
-      type: String,
-      default: "mp4",
-    },
+    options: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
   },
   data() {
     return {
-      hls:null,
-      msg:"",//消息内容
+      hls: null,
+      msg: "",//消息内容
       amount:0,//弹幕数量
       message: false,  
       control:true,
@@ -58,8 +56,21 @@ export default {
       showVideoInfo:false,
       currentTime:0,
       danmakuList: [],
-      full:false,//是否全屏
+      full: false,//是否全屏
+      original: false,//是否为原始分辨率
+      defaultRes: 720,//默认分辨率(之后可调整)
+      maxRes: 1080,//最大分辨率
+      currentRes: 720,//当前分辨率
     };
+  },
+  computed: {
+    //参数
+    params() {
+      return Object.assign({
+        type: 'mp4',
+        resource: {}
+      },this.options)
+    },
   },
   methods: {
     VideoInit() {
@@ -73,9 +84,13 @@ export default {
         return;
       }
       this.currentTime = video.currentTime;
+      let loaded = 0;
+      if (video.buffered.length) {
+        loaded = video.buffered.end(video.buffered.length - 1)
+      }
       this.$refs.control.TimeUpdate(
         video.currentTime,
-        video.buffered.end(video.buffered.length - 1)
+        loaded
       );
       if(this.$refs.danmaku){
         this.$refs.danmaku.TimeUpdate(video.currentTime);
@@ -167,18 +182,67 @@ export default {
     //处理全屏
     Full(full){
       this.full = full;
-    }
-  },
-  mounted(){
-    if(this.type == "hls"){
+    },
+    //获取最大分辨率
+    getMaxRes() {
+      let resource = this.params.resource;
+      if (resource.res1080) return 1080;
+      if (resource.res720) return 720;
+      if (resource.res480) return 480;
+      if (resource.res360) return 360;
+    },
+    //获取默认的分辨率
+    getDefaultRes(res) {
+      this.maxRes = this.getMaxRes();
+      this.currentRes = (this.maxRes >= res ? res : this.maxRes);
+      return 'res' + this.currentRes;
+    },
+    //设置分辨率
+    SetRes(res) {
+      if (this.original) return;
+      if (this.currentRes === res) return; 
+      this.currentRes = res;
+      if (this.params.type == "hls") {
+        
+        this.LoadHls(this.params.resource['res' + res]);
+      } else {
+        if (this.original) {
+          this.$refs.video.src = this.params.resource.original;
+        } else {
+          let res = this.getDefaultRes(this.defaultRes);
+          this.$refs.video.src = this.params.resource[res]
+        }
+      }
+    },
+    LoadHls(src) {
+      if(this.hls != null){
+        this.hls.stopLoad();
+        this.hls.destroy();
+      }
       this.hls = new Hls();
-      this.hls.loadSource(this.src);
+      this.hls.loadSource(src);
       this.hls.attachMedia(this.$refs.video);
       this.hls.on(Hls.Events.ERROR, () => {
         console.log('加载失败');
       });
-    }else{
-      this.$refs.video.src = this.src;
+    }
+  },
+  mounted(){
+    if (this.params.resource.original) this.original = true;
+    if(this.params.type == "hls"){
+      if (this.original) {
+        this.LoadHls(this.params.resource.original);
+      } else {
+        let res = this.getDefaultRes(this.defaultRes);
+        this.LoadHls(this.params.resource[res]);
+      }
+    } else {
+      if (this.original) {
+        this.$refs.video.src = this.params.resource.original;
+      } else {
+        let res = this.getDefaultRes(this.defaultRes);
+        this.$refs.video.src = this.params.resource[res]
+      }
     }
   },
   created(){

@@ -3,7 +3,7 @@
     <a-affix>
      <header-bar class="header"></header-bar>
     <div class="video-player">
-      <w-player v-if="showPlayer" :src="videoInfo.video" :vid="vid" :type="videoInfo.video_type"></w-player>
+      <w-player :key="timer" v-if="showPlayer" :vid="vid" :options="options" />
     </div>
     </a-affix>
     <div v-if="reply" class="reply">
@@ -17,7 +17,7 @@
       </div>
     </div>
     <div v-else class="comment" v-infinite-scroll="getMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
-      <div class="info">
+      <div v-if="showInfo" class="info">
         <div class="video-title">
           <span :class="['title',fold?'title-fold':'']">{{ videoInfo.title }}</span>
           <div class="fold" @click="fold = !fold">
@@ -26,17 +26,27 @@
           </div>
         </div>
         <div v-if="fold" class="author-fold">
-          <a-avatar :size="20" :src="authorInfo.avatar" />
-          <span>&nbsp;&nbsp;{{authorInfo.name}}&nbsp;{{videoInfo.create_at | toTime}}</span>
+          <a-avatar v-if="videoInfo.author.avatar" :size="20" :src="videoInfo.author.avatar"/>
+          <a-avatar v-else :size="20" icon="user" />
+          <span>&nbsp;&nbsp;{{videoInfo.author.name}}&nbsp;{{videoInfo.create_at | toTime}}</span>
         </div>
         <div v-else>
           <div class="author info-item">
-            <a-avatar :size="50" :src="authorInfo.avatar" />
-            <p class="name">{{authorInfo.name}}</p>
+            <a-avatar v-if="videoInfo.author.avatar" :size="50" :src="videoInfo.author.avatar"/>
+            <a-avatar v-else :size="50" icon="user" />
+            <p class="name">{{videoInfo.author.name}}</p>
             <p class="date">发布于&nbsp;{{videoInfo.create_at | toTime}}</p>
           </div> 
-          <p v-show="videoInfo.original" class="info-item"><a-icon style="color:#fd6d6f" type="stop" />未经作者授权，禁止转载</p>
-          <p class="info-item">{{videoInfo.introduction}}</p>
+          <p v-show="videoInfo.copyright" class="info-item"><a-icon style="color:#fd6d6f" type="stop" />未经作者授权，禁止转载</p>
+          <p class="info-item">{{videoInfo.desc}}</p>
+          <!-- 视频分集 -->
+          <div class="resource" v-if="length > 1">
+            <div class="resource-item" v-for="(item, index) in videoInfo.resource" :key="index">
+              <div @click="changeResource(index)">
+                <span>{{ index + 1}}P</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div>
@@ -58,31 +68,47 @@ import ReplyList from '../components/ReplyList.vue';
 export default {
   data() {
     return {
+      timer: "",//刷新播放器
+      length: 0,//分集长度
       title:config.title,
       vid: 0,
       hls:null,
       videoInfo: [],
-      authorInfo: [],
       url: "",
-      fold:true,//是否折叠
-      showPlayer:false,
+      fold: true,//是否折叠
+      showPlayer: false,
+      showInfo: false,
       busy:false,//不允许加载更多
       reply:false,//显示回复
       list:[],//回复列表
+      options: {
+        type: 'mp4',
+        resource: {}
+      }
     };
   },
   methods: {
     init() {
       getVideoInfo(this.vid).then((res) => {
         if (res.data.code === 2000) {
-          this.videoInfo = res.data.data.video;
-          this.authorInfo = res.data.data.video.author;
-          this.url = this.videoInfo.video;
+          let tempData = res.data.data;
+          this.videoInfo = tempData.video;
+          // this.authorID = tempData.video.author.uid;
+          // this.interactive = tempData.interactive;
+          this.options.type = tempData.video.video_type;
+          this.options.resource = tempData.video.resource[0];
+          this.length = tempData.video.resource.length;
+          this.showInfo = true;
           this.showPlayer=true;
         }
       }).catch((err) => {
         this.$message.error(err.response.data.msg);
       });
+    },
+    //改变分集
+    changeResource(index) {
+      this.options.resource = this.videoInfo.resource[index];
+      this.timer = new Date().getTime();
     },
     getMore(){
       this.$refs.comment.getMore();
@@ -234,4 +260,26 @@ export default {
   height: 100%;
   overflow-y:scroll;
 }
+
+/**分集 */
+.resource {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.resource-item {
+  width: 20%;
+  height: 30px;
+}
+
+.resource-item > div {
+  width: 90%;
+  height: 96%;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9e9e9;
+}
+
 </style>

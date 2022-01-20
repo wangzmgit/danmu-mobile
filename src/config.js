@@ -1,6 +1,6 @@
 const title = "HI!Danmu";
-const url = "http://localhost:90000";
-const desktop = "http://localhost:8080";
+const url = "/";
+const desktop = "/";
 const icp = "icp备案信息";
 
 const config = {
