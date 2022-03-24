@@ -28,14 +28,14 @@
         <div v-if="fold" class="author-fold">
           <a-avatar v-if="videoInfo.author.avatar" :size="20" :src="videoInfo.author.avatar"/>
           <a-avatar v-else :size="20" icon="user" />
-          <span>&nbsp;&nbsp;{{videoInfo.author.name}}&nbsp;{{videoInfo.create_at | toTime}}</span>
+          <span>&nbsp;&nbsp;{{videoInfo.author.name}}&nbsp;{{videoInfo.created_at | toTime}}</span>
         </div>
         <div v-else>
           <div class="author info-item">
             <a-avatar v-if="videoInfo.author.avatar" :size="50" :src="videoInfo.author.avatar"/>
             <a-avatar v-else :size="50" icon="user" />
             <p class="name">{{videoInfo.author.name}}</p>
-            <p class="date">发布于&nbsp;{{videoInfo.create_at | toTime}}</p>
+            <p class="date">发布于&nbsp;{{videoInfo.created_at | toTime}}</p>
           </div> 
           <p v-show="videoInfo.copyright" class="info-item"><a-icon style="color:#fd6d6f" type="stop" />未经作者授权，禁止转载</p>
           <p class="info-item">{{videoInfo.desc}}</p>
