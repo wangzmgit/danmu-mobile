@@ -203,16 +203,15 @@ export default {
       if (this.currentRes === res) return; 
       this.currentRes = res;
       if (this.params.type == "hls") {
-        
         this.LoadHls(this.params.resource['res' + res]);
       } else {
-        if (this.original) {
-          this.$refs.video.src = this.params.resource.original;
-        } else {
-          let res = this.getDefaultRes(this.defaultRes);
-          this.$refs.video.src = this.params.resource[res]
-        }
+        this.$refs.video.src = this.params.resource['res' + res]
       }
+      //设置播放时间和状态
+      let video = this.$refs.video;
+      video.currentTime = this.currentTime
+      if (this.$refs.control.video.play) video.play();
+      else video.pause();
     },
     LoadHls(src) {
       if(this.hls != null){
